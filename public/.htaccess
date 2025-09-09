@@ -23,3 +23,16 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# ---- Extra for audio/video ----
+<IfModule mod_mime.c>
+    AddType audio/mpeg .mp3
+    AddType audio/mp4 .m4a .mp4
+    AddType audio/ogg .ogg
+    AddType audio/wav .wav
+</IfModule>
+
+# Allow browser to access these files
+<FilesMatch "\.(mp3|mp4|wav|ogg)$">
+    Require all granted
+</FilesMatch>

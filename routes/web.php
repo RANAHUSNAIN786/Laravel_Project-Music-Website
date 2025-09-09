@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\PublicMusicController;
+use App\Http\Controllers\PublicVideoController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\projectController;
@@ -13,15 +16,37 @@ use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
-| 🌐 Public Routes (Accessible Without Login)
+|  Public Routes (Accessible Without Login)
 |--------------------------------------------------------------------------
 */
-Route::get('/', [HomePageController::class, 'index']);
-Route::view('/home', 'user.index')->name('home');
+Route::get('/', [HomePageController::class, 'index'])->name('home');
+Route::get('/home', [HomePageController::class, 'index']);
+
 Route::view('/about', 'user.about');
 Route::view('/blog', 'user.blog');
-Route::view('/track', 'user.track');
+Route::get('/track', [HomePageController::class, 'trackPage'])->name('track');
 Route::view('/contact', 'user.contact');
+
+// 🔍 Ajax Search Route
+Route::get('/ajax-search', [SearchController::class, 'ajaxSearch'])->name('ajax.search');
+
+// Videos List Page
+Route::get('/videos', [HomePageController::class, 'videoPage'])->name('videos');
+
+Route::get('/music/{id}', [PublicMusicController::class, 'show'])->name('music.details');
+Route::get('/video/{id}', [PublicVideoController::class, 'show'])->name('video.details');
+
+
+
+// ✅ Universal Details Route (for related results links)
+Route::get('/details/{type}/{id}', function ($type, $id) {
+    if ($type === 'video') {
+        return app(PublicVideoController::class)->show($id);
+    } elseif ($type === 'music') {
+        return app(PublicMusicController::class)->show($id);
+    }
+    abort(404);
+})->name('details.show');
 
 /*
 |--------------------------------------------------------------------------
@@ -94,7 +119,7 @@ Route::middleware(['auth', 'admin', 'prevent-back-history'])->group(function () 
     Route::post('/admin/category', [CategoryController::class, 'store'])->name('category.store');
     Route::delete('/admin/category/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
 
-    // Static Admin Pages (views only if needed)
+    // Static Admin Pages
     Route::view('/adminvideo', 'admin.video')->name('admin.video');
     Route::view('/adminmusic', 'admin.music')->name('admin.music');
     Route::view('/admindelete', 'admin.delete')->name('admin.delete');

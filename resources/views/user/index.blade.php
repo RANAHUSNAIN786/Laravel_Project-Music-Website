@@ -230,8 +230,8 @@
         </div>
     </div>
 </div>
-<!-- Latest Music Section -->
-<div class="mt-20 bg-white py-28">
+ <!-- Latest Music Section -->
+ <div class="mt-20 bg-white py-28">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12 sm:mb-16">
             <span class="inline-block px-4 py-2 bg-purple-100 text-purple-800 text-sm font-medium rounded-full mb-4">
@@ -285,101 +285,66 @@
             </div>
         </div>
         
-        <div class="space-y-6">
-            @forelse($music as $track)
-                <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
-                    <div class="flex flex-col md:flex-row items-center p-4 sm:p-6 gap-4 sm:gap-6">
-                        <!-- Album Cover -->
-                        <div class="flex-shrink-0">
-                            <div class="relative group">
-                                <img src="{{ asset('storage/' . $track->cover_image) }}" alt="Cover Image"
-                                     class="w-20 sm:w-24 md:w-32 h-20 sm:h-24 md:h-32 object-cover rounded-xl shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-                                <div class="absolute inset-0 bg-black/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                                    <svg class="w-6 sm:w-8 h-6 sm:h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M8 5v10l8-5-8-5z"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Track Info -->
-                        <div class="flex-grow text-center md:text-left">
-                            <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2">{{ $track->title }}</h3>
-                            <p class="text-gray-600 mb-4 flex items-center justify-center md:justify-start text-sm sm:text-base">
-                                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
-                                </svg>
-                                {{ \Carbon\Carbon::parse($track->release_date)->format('d F, Y') }}
-                            </p>
-                            
-                            <!-- Audio Player -->
-                            <div class="w-full">
-                                <audio controls class="w-full h-12 rounded-lg shadow-sm">
-                                    <source src="{{ asset('storage/' . $track->audio_file) }}" type="audio/mp3">
-                                    Your browser does not support the audio element.
-                                </audio>
-                            </div>
-                        </div>
-                        
-                        <!-- Action Buttons -->
-                        <div class="flex flex-col gap-2">
-                            <button class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-medium rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl">
-                                Download
-                            </button>
-                            <button class="px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-all duration-300">
-                                Share
-                            </button>
+       <div class="space-y-6">
+    @forelse($music as $track)
+        <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
+            <div class="flex flex-col md:flex-row items-center p-4 sm:p-6 gap-4 sm:gap-6">
+                <!-- Album Cover -->
+                <div class="flex-shrink-0">
+                    <div class="relative group">
+                        <img src="{{ asset('storage/' . $track->cover_image) }}" alt="Cover Image"
+                             class="w-20 sm:w-24 md:w-28 lg:w-32 h-20 sm:h-24 md:h-28 lg:h-32 object-cover rounded-xl shadow-md group-hover:shadow-lg transition-shadow duration-300">
+                        <div class="absolute inset-0 bg-black/25 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                            <svg class="w-6 sm:w-8 h-6 sm:h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M8 5v10l8-5-8-5z"/>
+                            </svg>
                         </div>
                     </div>
                 </div>
-            @empty
-                <div class="text-center py-16">
-                    <div class="text-gray-400 mb-4">
-                        <svg class="w-24 h-24 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                
+                <!-- Track Info -->
+                <div class="flex-grow text-center md:text-left">
+                    <h3 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-1">{{ $track->title }}</h3>
+                    <p class="text-gray-600 mb-3 flex items-center justify-center md:justify-start text-xs sm:text-sm">
+                        <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
                         </svg>
+                        {{ \Carbon\Carbon::parse($track->release_date)->format('d F, Y') }}
+                    </p>
+                    
+                   <!-- Audio Player -->
+                    <div class="w-full">
+                        <audio controls class="w-full h-10 rounded-md shadow-sm">
+                            <source src="{{ asset('storage/' . $track->audio_file) }}" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
                     </div>
-                    <h3 class="text-lg sm:text-xl font-semibold text-gray-600 mb-2">No music tracks found</h3>
-                    <p class="text-gray-500">New tracks will appear here when available.</p>
                 </div>
-            @endforelse
-        </div>
-        
-        
-        <!-- Enhanced Music Player Controls -->
-        <div class="mt-12">
-            <div class="bg-gradient-to-r from-gray-50 to-purple-50 rounded-2xl p-6 border border-purple-100">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div class="flex items-center space-x-4">
-                        <div class="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.369 4.369 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h4 class="font-semibold text-gray-900">Music Collection</h4>
-                            <p class="text-sm text-gray-600">{{ $music->count() }} tracks available</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <button class="px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-300 shadow-sm">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
-                            </svg>
-                        </button>
-                        <button class="px-4 py-2 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition-colors duration-300 shadow-sm">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/>
-                            </svg>
-                        </button>
-                        <button class="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg">
-                            Play All
-                        </button>
-                    </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col gap-2 mt-4 md:mt-0">
+                    <button class="px-3 py-1.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-sm font-medium rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-md hover:shadow-lg">
+                        Download
+                    </button>
+                    <button class="px-3 py-1.5 bg-gray-100 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-200 transition-all duration-300">
+                        Share
+                    </button>
                 </div>
             </div>
         </div>
-        
+    @empty
+        <div class="text-center py-16">
+            <div class="text-gray-400 mb-4">
+                <svg class="w-24 h-24 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
+                </svg>
+            </div>
+            <h3 class="text-lg sm:text-xl font-semibold text-gray-600 mb-2">No music tracks found</h3>
+            <p class="text-gray-500">New tracks will appear here when available.</p>
+        </div>
+    @endforelse
+</div>
+
         <!-- Review Form -->
         @auth
         @if($music->count())
@@ -465,7 +430,5 @@
         @endif
     </div>
 </div>
-
-
 
 @endsection

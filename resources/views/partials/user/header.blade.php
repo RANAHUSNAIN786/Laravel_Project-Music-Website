@@ -37,6 +37,17 @@
                     </a>
                 </nav>
 
+                <!-- Desktop Search Bar -->
+                <div class="hidden lg:block relative w-72 mx-6">
+                    <input type="text" id="search-input" 
+                           placeholder="Search music or videos..."
+                           class="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <div id="search-results" 
+                         class="absolute top-12 left-0 w-full bg-white rounded-lg shadow-lg hidden max-h-80 overflow-y-auto z-50">
+                        <!-- AJAX Results here -->
+                    </div>
+                </div>
+
                 <!-- Desktop Auth Section -->
                 <div class="hidden lg:flex items-center space-x-4">
                     @guest
@@ -90,6 +101,18 @@
         <!-- Mobile Menu -->
         <div class="lg:hidden mobile-menu hidden bg-white border-t border-gray-100 shadow-lg" id="mobile-menu">
             <div class="container mx-auto px-4 py-4">
+                
+                <!-- Mobile Search Bar -->
+                <div class="relative mb-4">
+                    <input type="text" id="mobile-search-input" 
+                           placeholder="Search..."
+                           class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <div id="mobile-search-results" 
+                         class="absolute top-14 left-0 w-full bg-white rounded-lg shadow-lg hidden max-h-80 overflow-y-auto z-50">
+                        <!-- AJAX Results -->
+                    </div>
+                </div>
+
                 <!-- Mobile Navigation Links -->
                 <nav class="space-y-2 mb-6">
                     <a href="{{ url('/') }}" class="mobile-nav-link {{ request()->is('/') ? 'active' : '' }}">
@@ -169,32 +192,12 @@
     @apply text-white bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg;
 }
 
-.nav-link:not(.active):hover {
-    @apply transform hover:scale-105;
-}
-
 .mobile-nav-link {
     @apply flex items-center w-full px-4 py-3 text-gray-700 font-medium rounded-xl transition-all duration-300 hover:bg-purple-50 hover:text-purple-600;
 }
 
 .mobile-nav-link.active {
     @apply text-white bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg;
-}
-
-/* Header scroll effect */
-.header-scrolled {
-    @apply bg-white/98 shadow-xl;
-}
-
-/* Mobile menu animation */
-.mobile-menu {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-in-out;
-}
-
-.mobile-menu.show {
-    max-height: 500px;
 }
 </style>
 
@@ -218,40 +221,52 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
-    // Header scroll effect
-    const header = document.getElementById('main-header');
-    let lastScrollTop = 0;
-    
-    window.addEventListener('scroll', function() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        
-        if (scrollTop > 100) {
-            header.classList.add('header-scrolled');
+
+    // AJAX Search (Desktop + Mobile)
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    const mobileSearchInput = document.getElementById('mobile-search-input');
+    const mobileSearchResults = document.getElementById('mobile-search-results');
+
+    async function fetchResults(query, resultBox) {
+        if (!query || query.length < 2) {
+            resultBox.classList.add('hidden');
+            return;
+        }
+        const response = await fetch(`/ajax-search?q=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        let html = '';
+        if (data.music.length === 0 && data.videos.length === 0) {
+            html = `<div class="p-3 text-gray-500">No results found</div>`;
         } else {
-            header.classList.remove('header-scrolled');
+            if (data.music.length > 0) {
+                html += `<div class="p-2 font-semibold text-purple-600">Music</div>`;
+                data.music.forEach(item => {
+                    html += `<a href="${item.link}" class="block p-2 hover:bg-purple-50">🎵 ${item.title} <span class="text-sm text-gray-500">(${item.artist})</span></a>`;
+                });
+            }
+            if (data.videos.length > 0) {
+                html += `<div class="p-2 font-semibold text-pink-600">Videos</div>`;
+                data.videos.forEach(item => {
+                    html += `<a href="${item.link}" class="block p-2 hover:bg-pink-50">🎬 ${item.title} <span class="text-sm text-gray-500">(${item.artist})</span></a>`;
+                });
+            }
         }
-        
-        // Hide header on scroll down, show on scroll up
-        if (scrollTop > lastScrollTop && scrollTop > 200) {
-            header.style.transform = 'translateY(-100%)';
-        } else {
-            header.style.transform = 'translateY(0)';
-        }
-        
-        lastScrollTop = scrollTop;
-    });
-    
-    // Close mobile menu when clicking outside
-    document.addEventListener('click', function(event) {
-        if (!event.target.closest('.mobile-menu-button') && !event.target.closest('.mobile-menu')) {
-            mobileMenu.classList.add('hidden');
-            mobileMenu.classList.remove('show');
-            
-            // Reset hamburger icon
-            const icon = mobileMenuToggle.querySelector('svg');
-            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
-        }
+        resultBox.innerHTML = html;
+        resultBox.classList.remove('hidden');
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', () => fetchResults(searchInput.value, searchResults));
+    }
+    if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('input', () => fetchResults(mobileSearchInput.value, mobileSearchResults));
+    }
+
+    // Hide results on outside click
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#search-input')) searchResults.classList.add('hidden');
+        if (!e.target.closest('#mobile-search-input')) mobileSearchResults.classList.add('hidden');
     });
 });
 </script>
