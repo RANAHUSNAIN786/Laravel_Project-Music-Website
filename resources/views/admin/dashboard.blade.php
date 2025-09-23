@@ -76,53 +76,54 @@
 
 <!-- Recent Activity Section -->
 <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-    <!-- Latest Music -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
-                <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-3">
-                    <i class="fas fa-music text-blue-600 dark:text-blue-400"></i>
-                </div>
-                Latest Music
-            </h3>
-            <a href="{{ route('admin.allmusic') }}" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
-                View all
-                <i class="fas fa-arrow-right ml-1 text-xs"></i>
-            </a>
-        </div>
+<!-- Latest Music -->
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
+            <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mr-3">
+                <i class="fas fa-music text-blue-600 dark:text-blue-400"></i>
+            </div>
+            Latest Music
+        </h3>
+        <a href="{{ route('admin.allmusic') }}" class="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
+            View all
+            <i class="fas fa-arrow-right ml-1 text-xs"></i>
+        </a>
+    </div>
 
-        <div class="p-6">
-            <div class="space-y-4">
-                @forelse($latestMusic as $music)
-                    <div class="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                        <div class="flex-shrink-0">
-                            @if($music->cover_image)
-                                <img src="{{ asset('storage/' . $music->cover_image) }}" class="w-16 h-16 rounded-lg object-cover shadow-sm">
-                            @else
-                                <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center shadow-sm">
-                                    <i class="fas fa-music text-white text-lg"></i>
-                                </div>
+    <div class="p-6">
+        <div class="space-y-4">
+            @forelse($latestMusic as $music)
+                <div class="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                    <div class="flex-shrink-0">
+                        @if($music->cover_image)
+                            <img src="{{ asset('storage/' . $music->cover_image) }}" class="w-16 h-16 rounded-lg object-cover shadow-sm">
+                        @else
+                            <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center shadow-sm">
+                                <i class="fas fa-music text-white text-lg"></i>
+                            </div>
+                        @endif
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $music->title }}</h4>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 truncate">{{ $music->artist }}</p>
+                        <div class="flex items-center space-x-4 mt-2">
+                            @if($music->album)
+                                <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-compact-disc mr-1"></i>{{ $music->album }}</span>
+                            @endif
+                            @if($music->year)
+                                <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-calendar mr-1"></i>{{ $music->year }}</span>
                             @endif
                         </div>
-                        <div class="flex-1 min-w-0">
-                            <h4 class="text-sm font-semibold text-gray-900 dark:text-white truncate">{{ $music->title }}</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-400 truncate">{{ $music->artist }}</p>
-                            <div class="flex items-center space-x-4 mt-2">
-                                @if($music->album)
-                                    <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-compact-disc mr-1"></i>{{ $music->album }}</span>
-                                @endif
-                                @if($music->year)
-                                    <span class="text-xs text-gray-500 dark:text-gray-400"><i class="fas fa-calendar mr-1"></i>{{ $music->year }}</span>
-                                @endif
-                            </div>
-                        </div>
                     </div>
-                @empty
-                    <p class="text-center text-gray-500 dark:text-gray-400">No music uploaded yet.</p>
-                @endforelse
-            </div>
+                </div>
+            @empty
+                <p class="text-center text-gray-500 dark:text-gray-400">No music uploaded yet.</p>
+            @endforelse
         </div>
     </div>
+</div>
+
 
     <!-- Latest Videos -->
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
