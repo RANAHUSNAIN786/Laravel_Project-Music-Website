@@ -76,21 +76,7 @@
                         </audio>
                     </div>
                     
-                    <!-- Action Button -->
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#" class="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-pink-700 transform hover:scale-105 transition-all duration-300 shadow-lg">
-                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                            </svg>
-                            Buy Album
-                        </a>
-                        <button class="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-gray-100 text-gray-700 font-semibold rounded-full hover:bg-gray-200 transition-all duration-300">
-                            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z"/>
-                            </svg>
-                            Share
-                        </button>
-                    </div>
+                   
                 </div>
             </div>
         </div>
@@ -461,73 +447,7 @@
     </div>
   </div>
 </div>
-
-<!-- Like Button Script -->
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const likeButtons = document.querySelectorAll(".like-btn");
-
-    likeButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const heart = btn.querySelector(".heart");
-
-        if (heart.getAttribute("fill") === "red") {
-          heart.setAttribute("fill", "none");
-          heart.setAttribute("stroke", "currentColor");
-          btn.classList.remove("bg-pink-200", "text-pink-600");
-        } else {
-          heart.setAttribute("fill", "red");
-          heart.setAttribute("stroke", "red");
-          btn.classList.add("bg-pink-200", "text-pink-600");
-        }
-      });
-    });
-  });
-</script>
-
-        <!-- Review Form -->
-        @auth
-        @if($music->count())
-        <div class="mt-12 sm:mt-16">
-            <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 sm:p-8 border border-purple-100">
-                <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6 text-center">Share Your Review</h3>
-                <form action="{{ route('review.store') }}" method="POST" class="space-y-6">
-                    @csrf
-                    <input type="hidden" name="reviewable_type" value="music">
-                    
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Select Music Track:</label>
-                        <select name="reviewable_id" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
-                            @foreach($music as $track)
-                                <option value="{{ $track->id }}">{{ $track->title }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Your Rating:</label>
-                        <select name="rating" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
-                            @for ($i = 5; $i >= 1; $i--)
-                                <option value="{{ $i }}">{{ str_repeat('★', $i) }} ({{ $i }} star{{ $i > 1 ? 's' : '' }})</option>
-                            @endfor
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Your Review:</label>
-                        <textarea name="comment" rows="4" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Share your thoughts about this track..."></textarea>
-                    </div>
-                    
-                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-3 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl">
-                        Submit Review
-                    </button>
-                </form>
-            </div>
-        </div>
-        @endif
-        @endauth
-        
-        <!-- Reviews Display -->
+          <!-- Reviews Display -->
         @if($music->flatMap->reviews->count())
         <div class="mt-12 sm:mt-16">
             <div class="bg-gray-50 rounded-2xl p-6 sm:p-8">
@@ -571,4 +491,72 @@
     </div>
 </div>
 
+        <!-- Review Form -->
+        @auth
+        @if($music->count())
+        <div class="mt-12 sm:mt-16">
+            <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 sm:p-8 border border-purple-100">
+                <h3 class="text-xl sm:text-2xl font-bold text-gray-900 mb-6 text-center">Share Your Review</h3>
+                <form action="{{ route('review.store') }}" method="POST" class="space-y-6">
+                    @csrf
+                    <input type="hidden" name="reviewable_type" value="music">
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Select Music Track:</label>
+                        <select name="reviewable_id" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
+                            @foreach($music as $track)
+                                <option value="{{ $track->id }}">{{ $track->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Your Rating:</label>
+                        <select name="rating" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent" required>
+                            @for ($i = 5; $i >= 1; $i--)
+                                <option value="{{ $i }}">{{ str_repeat('★', $i) }} ({{ $i }} star{{ $i > 1 ? 's' : '' }})</option>
+                            @endfor
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Your Review:</label>
+                        <textarea name="comment" rows="4" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Share your thoughts about this track..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-3 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+                        Submit Review
+                    </button>
+                </form>
+            </div>
+        </div>
+        @endif
+        @endauth
+        
+       
+<!-- Like Button Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const likeButtons = document.querySelectorAll(".like-btn");
+
+    likeButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const heart = btn.querySelector(".heart");
+
+        if (heart.getAttribute("fill") === "red") {
+          heart.setAttribute("fill", "none");
+          heart.setAttribute("stroke", "currentColor");
+          btn.classList.remove("bg-pink-200", "text-pink-600");
+        } else {
+          heart.setAttribute("fill", "red");
+          heart.setAttribute("stroke", "red");
+          btn.classList.add("bg-pink-200", "text-pink-600");
+        }
+      });
+    });
+  });
+</script>
+
+
 @endsection
+

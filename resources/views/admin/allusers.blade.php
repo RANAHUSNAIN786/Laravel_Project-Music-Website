@@ -90,40 +90,6 @@
     </div>
 </div>
 
-<!-- Filters and Search -->
-<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8">
-    <div class="p-6">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-            <!-- Search -->
-            <div class="relative flex-1 max-w-md">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i class="fas fa-search text-gray-400"></i>
-                </div>
-                <input type="text" 
-                       placeholder="Search users by name or email..." 
-                       class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-            </div>
-
-            <!-- Filter Options -->
-            <div class="flex items-center space-x-3">
-                <select class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>All Users</option>
-                    <option>Active Users</option>
-                    <option>New Users</option>
-                    <option>Inactive Users</option>
-                </select>
-
-                <button class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                    <i class="fas fa-filter"></i>
-                </button>
-
-                <button class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                    <i class="fas fa-download"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Users Table -->
 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
@@ -263,10 +229,7 @@
 
                                 <!-- More Options -->
                                 <div class="relative" x-data="{ open: false }">
-                                    <button @click="open = !open" 
-                                            class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
+                                 
                                     
                                     <div x-show="open" 
                                          @click.away="open = false"

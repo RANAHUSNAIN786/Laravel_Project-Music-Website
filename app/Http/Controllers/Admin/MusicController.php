@@ -9,11 +9,20 @@ use Illuminate\Support\Facades\Storage;
 
 class MusicController extends Controller
 {
-    // Show all music entries
-    public function index()
+    // Show all music entries (with sorting)
+    public function index(Request $request)
     {
-        $music = Music::latest()->get();
-        return view('admin.music', compact('music'));
+        $sortField = $request->get('sort', 'created_at');
+        $sortOrder = $request->get('order', 'desc');
+
+        $allowedFields = ['title', 'artist', 'album', 'year', 'genre', 'created_at'];
+        if (!in_array($sortField, $allowedFields)) {
+            $sortField = 'created_at';
+        }
+
+        $music = Music::orderBy($sortField, $sortOrder)->get();
+
+        return view('admin.music', compact('music', 'sortField', 'sortOrder'));
     }
 
     // Store new music entry
@@ -51,14 +60,14 @@ class MusicController extends Controller
         return back()->with('success', 'Music uploaded successfully!');
     }
 
-    // Show the form to edit a single music entry
+    // Edit form
     public function edit($id)
     {
         $music = Music::findOrFail($id);
         return view('admin.editmusic', compact('music'));
     }
 
-    // Update a music entry
+    // Update entry
     public function update(Request $request, $id)
     {
         $music = Music::findOrFail($id);
@@ -131,5 +140,20 @@ class MusicController extends Controller
         $music->delete();
 
         return redirect()->route('music.deleteview')->with('success', 'Music deleted successfully!');
+    }
+
+    // ✅ Download entry
+    public function download($id)
+    {
+        $music = Music::findOrFail($id);
+
+        if (!$music->audio_file || !Storage::disk('public')->exists($music->audio_file)) {
+            return back()->with('error', 'File not found.');
+        }
+
+        return Storage::disk('public')->download(
+            $music->audio_file,
+            $music->title . '.mp3'
+        );
     }
 }

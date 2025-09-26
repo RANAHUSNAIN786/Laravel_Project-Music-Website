@@ -5,18 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Video;
-
+use Illuminate\Support\Facades\Storage;
 class VideoController extends Controller
 {
     /**
      * Show all videos (index).
      */
-   public function index()
-{
-    $videos = Video::latest()->get();
-    return view('admin.allvideo', compact('videos'));
-}
-
+    public function index()
+    {
+        $videos = Video::latest()->get();
+        return view('admin.allvideo', compact('videos'));
+    }
 
     /**
      * Store a new video.
@@ -117,7 +116,7 @@ class VideoController extends Controller
     }
 
     /**
-     * Show all videos with edit buttons (like music edit list).
+     * Show all videos with edit buttons.
      */
     public function editView()
     {
@@ -135,4 +134,6 @@ class VideoController extends Controller
 
         return back()->with('success', 'Video deleted successfully!');
     }
+
+   
 }

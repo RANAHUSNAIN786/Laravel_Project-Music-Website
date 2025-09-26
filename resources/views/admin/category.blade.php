@@ -78,37 +78,6 @@
     </div>
 </div>
 
-<!-- Search and Filter -->
-<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8">
-    <div class="p-6">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-            <!-- Search -->
-            <div class="relative flex-1 max-w-md">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i class="fas fa-search text-gray-400"></i>
-                </div>
-                <input type="text" 
-                       placeholder="Search categories..." 
-                       class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent">
-            </div>
-
-            <!-- Filter Options -->
-            <div class="flex items-center space-x-3">
-                <select class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
-                    <option>All Categories</option>
-                    <option>Music Categories</option>
-                    <option>Video Categories</option>
-                    <option>Recently Added</option>
-                </select>
-
-                <button class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                    <i class="fas fa-sort-alpha-down"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- Categories Grid -->
 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
     @if($categories->isEmpty())
@@ -131,23 +100,21 @@
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Categories ({{ $categories->count() }})</h3>
                 <div class="flex items-center space-x-2">
-                    <button class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                        <i class="fas fa-th mr-1"></i>
-                        Grid
+                    <button onclick="setView('grid')" id="gridBtn" class="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300">
+                        <i class="fas fa-th mr-1"></i> Grid
                     </button>
-                    <button class="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300">
-                        <i class="fas fa-list mr-1"></i>
-                        List
+                    <button onclick="setView('list')" id="listBtn" class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                        <i class="fas fa-list mr-1"></i> List
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- Categories Grid -->
+        <!-- Categories Wrapper -->
         <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div id="categoriesWrapper" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 @foreach ($categories as $category)
-                <div class="group bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 border border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-600">
+                <div class="category-card group bg-gray-50 dark:bg-gray-700/50 rounded-xl p-6 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 border border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-600">
                     <!-- Category Icon -->
                     <div class="flex items-center justify-between mb-4">
                         <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center shadow-sm">
@@ -163,12 +130,6 @@
                             
                             <div x-show="open" 
                                  @click.away="open = false"
-                                 x-transition:enter="transition ease-out duration-100"
-                                 x-transition:enter-start="transform opacity-0 scale-95"
-                                 x-transition:enter-end="transform opacity-100 scale-100"
-                                 x-transition:leave="transition ease-in duration-75"
-                                 x-transition:leave-start="transform opacity-100 scale-100"
-                                 x-transition:leave-end="transform opacity-0 scale-95"
                                  class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 z-10"
                                  style="display: none;">
                                 <div class="py-1">
@@ -329,6 +290,29 @@ function editCategory(id, name) {
     document.getElementById('editCategoryForm').action = `/admin/category/${id}`;
     document.getElementById('editCategoryName').value = name;
     document.getElementById('editCategoryModal').classList.remove('hidden');
+}
+
+// ✅ Grid/List Toggle
+function setView(view) {
+    const wrapper = document.getElementById('categoriesWrapper');
+    const gridBtn = document.getElementById('gridBtn');
+    const listBtn = document.getElementById('listBtn');
+
+    if (view === 'grid') {
+        wrapper.classList.remove('flex', 'flex-col', 'space-y-4');
+        wrapper.classList.add('grid','grid-cols-1','md:grid-cols-2','lg:grid-cols-3','xl:grid-cols-4','gap-6');
+        gridBtn.classList.add('text-purple-600','dark:text-purple-400');
+        gridBtn.classList.remove('text-gray-500','dark:text-gray-400');
+        listBtn.classList.remove('text-purple-600','dark:text-purple-400');
+        listBtn.classList.add('text-gray-500','dark:text-gray-400');
+    } else {
+        wrapper.classList.remove('grid','grid-cols-1','md:grid-cols-2','lg:grid-cols-3','xl:grid-cols-4','gap-6');
+        wrapper.classList.add('flex','flex-col','space-y-4');
+        listBtn.classList.add('text-purple-600','dark:text-purple-400');
+        listBtn.classList.remove('text-gray-500','dark:text-gray-400');
+        gridBtn.classList.remove('text-purple-600','dark:text-purple-400');
+        gridBtn.classList.add('text-gray-500','dark:text-gray-400');
+    }
 }
 </script>
 @endsection

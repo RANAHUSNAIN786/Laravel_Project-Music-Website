@@ -3,296 +3,191 @@
 @section('title', 'All Music')
 
 @section('content')
-<!-- Page Header -->
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-    <div>
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Music Library</h1>
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Manage all your music tracks</p>
-    </div>
-    <div class="mt-4 sm:mt-0">
-        <a href="{{ route('admin.music') }}" 
-           class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm transition-colors duration-200">
-            <i class="fas fa-plus mr-2"></i>
-            Add New Music
-        </a>
-    </div>
-</div>
+<!-- Alpine.js -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
-<!-- Stats Cards -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-        <div class="flex items-center">
-            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                <i class="fas fa-music text-blue-600 dark:text-blue-400 text-xl"></i>
-            </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Tracks</p>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $music->count() }}</p>
-            </div>
+<div x-data="{ view: 'list' }">
+    <!-- Page Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Music Library</h1>
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Manage all your music tracks</p>
         </div>
-    </div>
-
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-        <div class="flex items-center">
-            <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                <i class="fas fa-user-music text-green-600 dark:text-green-400 text-xl"></i>
-            </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Artists</p>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $music->pluck('artist')->unique()->count() }}</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-        <div class="flex items-center">
-            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                <i class="fas fa-compact-disc text-purple-600 dark:text-purple-400 text-xl"></i>
-            </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Albums</p>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $music->whereNotNull('album')->pluck('album')->unique()->count() }}</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-        <div class="flex items-center">
-            <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
-                <i class="fas fa-tags text-orange-600 dark:text-orange-400 text-xl"></i>
-            </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Genres</p>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $music->whereNotNull('genre')->pluck('genre')->unique()->count() }}</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Filters and Search -->
-<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 mb-8">
-    <div class="p-6">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
-            <!-- Search -->
-            <div class="relative flex-1 max-w-md">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i class="fas fa-search text-gray-400"></i>
-                </div>
-                <input type="text" 
-                       placeholder="Search music tracks..." 
-                       class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-            </div>
-
-            <!-- Filter Buttons -->
-            <div class="flex items-center space-x-3">
-                <select class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <option>All Genres</option>
-                    @foreach($music->whereNotNull('genre')->pluck('genre')->unique() as $genre)
-                        <option>{{ $genre }}</option>
-                    @endforeach
-                </select>
-
-                <button class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                    <i class="fas fa-filter"></i>
-                </button>
-
-                <button class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                    <i class="fas fa-sort"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Music Table -->
-<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-    @if($music->isEmpty())
-        <!-- Empty State -->
-        <div class="text-center py-16">
-            <div class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-music text-gray-400 text-3xl"></i>
-            </div>
-            <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No music tracks found</h3>
-            <p class="text-gray-500 dark:text-gray-400 mb-8">Get started by uploading your first music track.</p>
+        <div class="mt-4 sm:mt-0 flex space-x-4">
             <a href="{{ route('admin.music') }}" 
-               class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
+               class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow-sm transition-colors duration-200">
                 <i class="fas fa-plus mr-2"></i>
-                Add Your First Track
+                Add New Music
             </a>
-        </div>
-    @else
-        <!-- Table Header -->
-        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Music Tracks ({{ $music->count() }})</h3>
-        </div>
 
-        <!-- Table -->
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gray-50 dark:bg-gray-700/50">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Track
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Artist
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Album
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Year
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Genre
-                        </th>
-                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Actions
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    @foreach($music as $track)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
-                        <!-- Track Info -->
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 w-12 h-12">
+            <!-- Toggle -->
+            <div class="flex items-center space-x-2">
+                <button @click="view = 'list'"
+                        :class="view === 'list' ? 'bg-green-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'"
+                        class="px-4 py-2 text-sm font-medium rounded-lg">
+                    <i class="fas fa-list mr-2"></i> List
+                </button>
+                <button @click="view = 'grid'"
+                        :class="view === 'grid' ? 'bg-green-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'"
+                        class="px-4 py-2 text-sm font-medium rounded-lg">
+                    <i class="fas fa-th mr-2"></i> Grid
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border p-6">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-music text-blue-600 dark:text-blue-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Tracks</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $music->count() }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border p-6">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-user text-green-600 dark:text-green-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Artists</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $music->pluck('artist')->unique()->count() }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border p-6">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-compact-disc text-purple-600 dark:text-purple-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Albums</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $music->whereNotNull('album')->pluck('album')->unique()->count() }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border p-6">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-tags text-orange-600 dark:text-orange-400 text-xl"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Genres</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $music->whereNotNull('genre')->pluck('genre')->unique()->count() }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border">
+        @if($music->isEmpty())
+            <div class="text-center py-16">
+                <div class="w-24 h-24 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-music text-gray-400 text-3xl"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">No music tracks found</h3>
+                <p class="text-gray-500 dark:text-gray-400 mb-8">Get started by uploading your first music track.</p>
+                <a href="{{ route('admin.music') }}" 
+                   class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
+                    <i class="fas fa-plus mr-2"></i>
+                    Add Your First Track
+                </a>
+            </div>
+        @else
+
+            <!-- LIST VIEW -->
+            <div x-show="view === 'list'" class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-gray-50 dark:bg-gray-700/50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Track</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Artist</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Album</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Year</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Genre</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        @foreach($music as $track)
+                        <tr>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
                                     @if($track->cover_image)
-                                        <img src="{{ asset('storage/' . $track->cover_image) }}" 
-                                             alt="Cover" 
-                                             class="w-12 h-12 rounded-lg object-cover shadow-sm">
+                                        <img src="{{ asset('storage/' . $track->cover_image) }}" class="w-12 h-12 rounded-lg object-cover">
                                     @else
-                                        <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center shadow-sm">
-                                            <i class="fas fa-music text-white"></i>
+                                        <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center text-white">
+                                            <i class="fas fa-music"></i>
                                         </div>
                                     @endif
-                                </div>
-                                <div class="ml-4">
-                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                        {{ $track->title }}
+                                    <div class="ml-3">
+                                        <p class="font-medium">{{ $track->title }}</p>
+                                        <p class="text-xs text-gray-500">{{ Str::limit($track->description, 40) }}</p>
                                     </div>
-                                    @if($track->description)
-                                        <div class="text-sm text-gray-500 dark:text-gray-400 truncate max-w-xs">
-                                            {{ Str::limit($track->description, 50) }}
-                                        </div>
-                                    @endif
                                 </div>
-                            </div>
-                        </td>
-
-                        <!-- Artist -->
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900 dark:text-white">{{ $track->artist }}</div>
-                        </td>
-
-                        <!-- Album -->
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900 dark:text-white">
-                                {{ $track->album ?? '—' }}
-                            </div>
-                        </td>
-
-                        <!-- Year -->
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900 dark:text-white">
-                                {{ $track->year ?? '—' }}
-                            </div>
-                        </td>
-
-                        <!-- Genre -->
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            @if($track->genre)
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
-                                    {{ $track->genre }}
-                                </span>
-                            @else
-                                <span class="text-sm text-gray-400">—</span>
-                            @endif
-                        </td>
-
-                        <!-- Actions -->
-                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <div class="flex items-center justify-end space-x-2">
-                                <!-- View/Play Button -->
-                                <button class="p-2 text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200" 
-                                        title="Play">
-                                    <i class="fas fa-play"></i>
-                                </button>
-
-                                <!-- Edit Button -->
-                                <a href="{{ route('music.edit', $track->id) }}" 
-                                   class="p-2 text-gray-400 hover:text-yellow-600 dark:hover:text-yellow-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                                   title="Edit">
+                            </td>
+                            <td class="px-6 py-4">{{ $track->artist }}</td>
+                            <td class="px-6 py-4">{{ $track->album ?? '—' }}</td>
+                            <td class="px-6 py-4">{{ $track->year ?? '—' }}</td>
+                            <td class="px-6 py-4">{{ $track->genre ?? '—' }}</td>
+                            <td class="px-6 py-4 text-right space-x-2">
+                                <a href="{{ route('music.edit', $track->id) }}" class="text-blue-600 hover:text-blue-800">
                                     <i class="fas fa-edit"></i>
                                 </a>
-
-                                <!-- Delete Button -->
                                 <form action="{{ route('music.delete', $track->id) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                            onclick="return confirm('Are you sure you want to delete this track?')"
-                                            class="p-2 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                                            title="Delete">
-                                        <i class="fas fa-trash-alt"></i>
+                                    @csrf @method('DELETE')
+                                    <button onclick="return confirm('Delete this track?')" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
 
-                                <!-- More Options -->
-                                <div class="relative" x-data="{ open: false }">
-                                    <button @click="open = !open" 
-                                            class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
-                                        <i class="fas fa-ellipsis-v"></i>
-                                    </button>
-                                    
-                                    <div x-show="open" 
-                                         @click.away="open = false"
-                                         x-transition:enter="transition ease-out duration-100"
-                                         x-transition:enter-start="transform opacity-0 scale-95"
-                                         x-transition:enter-end="transform opacity-100 scale-100"
-                                         x-transition:leave="transition ease-in duration-75"
-                                         x-transition:leave-start="transform opacity-100 scale-100"
-                                         x-transition:leave-end="transform opacity-0 scale-95"
-                                         class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-lg shadow-lg border border-gray-200 dark:border-gray-600 z-10"
-                                         style="display: none;">
-                                        <div class="py-1">
-                                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                <i class="fas fa-download mr-2"></i>Download
-                                            </a>
-                                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                <i class="fas fa-share mr-2"></i>Share
-                                            </a>
-                                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                <i class="fas fa-copy mr-2"></i>Duplicate
-                                            </a>
-                                        </div>
-                                    </div>
+            <!-- GRID VIEW -->
+            <div x-show="view === 'grid'" class="p-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    @foreach($music as $track)
+                    <div class="bg-white dark:bg-gray-800 border rounded-xl shadow-sm overflow-hidden group">
+                        <div class="relative">
+                            @if($track->cover_image)
+                                <img src="{{ asset('storage/' . $track->cover_image) }}" class="w-full h-48 object-cover">
+                            @else
+                                <div class="w-full h-48 bg-blue-500 flex items-center justify-center text-white">
+                                    <i class="fas fa-music text-2xl"></i>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
+                            @endif
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-medium truncate">{{ $track->title }}</h4>
+                            <p class="text-sm text-gray-500">{{ $track->artist }}</p>
+                        </div>
+                        <div class="p-4 border-t flex justify-end space-x-3">
+                            <a href="{{ route('music.edit', $track->id) }}" class="text-blue-600 hover:text-blue-800">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('music.delete', $track->id) }}" method="POST" class="inline">
+                                @csrf @method('DELETE')
+                                <button onclick="return confirm('Delete this track?')" class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                     @endforeach
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Table Footer -->
-        <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-            <div class="flex items-center justify-between">
-                <div class="text-sm text-gray-500 dark:text-gray-400">
-                    Showing {{ $music->count() }} of {{ $music->count() }} tracks
-                </div>
-                <div class="flex items-center space-x-2">
-                    <button class="px-3 py-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 disabled:opacity-50" disabled>
-                        Previous
-                    </button>
-                    <button class="px-3 py-1 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 disabled:opacity-50" disabled>
-                        Next
-                    </button>
                 </div>
             </div>
-        </div>
-    @endif
+
+        @endif
+    </div>
 </div>
 @endsection

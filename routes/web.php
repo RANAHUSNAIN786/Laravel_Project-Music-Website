@@ -3,6 +3,7 @@
 use App\Http\Controllers\PublicMusicController;
 use App\Http\Controllers\PublicVideoController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SubscriberController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\projectController;
@@ -27,16 +28,17 @@ Route::view('/blog', 'user.blog');
 Route::get('/track', [HomePageController::class, 'trackPage'])->name('track');
 Route::view('/contact', 'user.contact');
 
+Route::post('/subscribe', [SubscriberController::class, 'store'])->name('subscribe.store');
+
 // 🔍 Ajax Search Route
 Route::get('/ajax-search', [SearchController::class, 'ajaxSearch'])->name('ajax.search');
 
 // Videos List Page
 Route::get('/videos', [HomePageController::class, 'videoPage'])->name('videos');
 
+// Music details (public)
 Route::get('/music/{id}', [PublicMusicController::class, 'show'])->name('music.details');
 Route::get('/video/{id}', [PublicVideoController::class, 'show'])->name('video.details');
-
-
 
 // ✅ Universal Details Route (for related results links)
 Route::get('/details/{type}/{id}', function ($type, $id) {
@@ -104,6 +106,9 @@ Route::middleware(['auth', 'admin', 'prevent-back-history'])->group(function () 
     Route::delete('/admin/music/{id}', [MusicController::class, 'destroy'])->name('music.delete');
     Route::get('/admin/music/deleteview', [MusicController::class, 'deleteView'])->name('music.deleteview');
     Route::get('/admin/music/editview', [MusicController::class, 'editView'])->name('music.editview');
+    
+    // ✅ Music Download Route
+    Route::get('/admin/music/{id}/download', [MusicController::class, 'download'])->name('music.download');
 
     // Videos
     Route::get('/admin/video/all', [VideoController::class, 'index'])->name('video.index');
@@ -113,11 +118,17 @@ Route::middleware(['auth', 'admin', 'prevent-back-history'])->group(function () 
     Route::delete('/admin/video/{id}', [VideoController::class, 'destroy'])->name('video.delete');
     Route::get('/admin/video/deleteview', [VideoController::class, 'deleteView'])->name('video.deleteview');
     Route::get('/admin/video/editview', [VideoController::class, 'editView'])->name('video.editview');
+    Route::get('/admin/video/{id}/download', [VideoController::class, 'download'])->name('video.download');
 
     // Categories
     Route::get('/admincategory', [CategoryController::class, 'index'])->name('admin.category');
     Route::post('/admin/category', [CategoryController::class, 'store'])->name('category.store');
     Route::delete('/admin/category/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
+    
+    // Subscribers
+     Route::get('/admin/subscribers', [SubscriberController::class, 'index'])->name('admin.allsubscribers');
+      Route::post('/admin/subscribers', [SubscriberController::class, 'store'])->name('admin.subscribers.store');
+     Route::delete('/admin/subscribers/{id}', [SubscriberController::class, 'destroy'])->name('admin.subscriber.delete');
 
     // Static Admin Pages
     Route::view('/adminvideo', 'admin.video')->name('admin.video');
